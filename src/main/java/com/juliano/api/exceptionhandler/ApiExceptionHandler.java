@@ -1,7 +1,7 @@
 package com.juliano.api.exceptionhandler;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.juliano.api.exceptionhandler.Problema.Campo;
 import com.juliano.domain.model.exception.NegocioException;
 
 @ControllerAdvice
@@ -44,7 +43,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		Problema problema = new Problema();
 		
 		problema.setStatus(status.value());
-		problema.setDataHora(LocalDateTime.now());
+		problema.setDataHora(OffsetDateTime.now());
 		problema.setTitulo("um ou mais campos inválidos. Faça o preenchimento correto");
 		problema.setCampos(campos);
 		
@@ -59,7 +58,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		Problema problema = new Problema();
 		problema.setStatus(status.value());
-		problema.setDataHora(LocalDateTime.now());
+		problema.setDataHora(OffsetDateTime.now());
 		problema.setTitulo(ex.getMessage());
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
