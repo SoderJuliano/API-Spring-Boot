@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.juliano.domain.model.exception.EntidadeNaoEncontrada;
 import com.juliano.domain.model.exception.NegocioException;
 
 @ControllerAdvice
@@ -49,6 +50,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		// TODO Auto-generated method stub
 		return handleExceptionInternal(ex, problema, headers, status, request);
+	}
+	
+	@ExceptionHandler(EntidadeNaoEncontrada.class)
+	public ResponseEntity<Object> handleNegocio(EntidadeNaoEncontrada ex, WebRequest request){
+	
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		
+		Problema problema = new Problema();
+		problema.setStatus(status.value());
+		problema.setDataHora(OffsetDateTime.now());
+		problema.setTitulo(ex.getMessage());
+		
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
 	
 	@ExceptionHandler(NegocioException.class)

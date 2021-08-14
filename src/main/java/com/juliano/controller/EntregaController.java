@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.juliano.api.model.DestinatarioModel;
 import com.juliano.api.model.EntregaModel;
 import com.juliano.domain.model.Entrega;
+import com.juliano.domain.model.service.FinalizacaoEntregaService;
 import com.juliano.domain.model.service.SolicitacaoEntregaService;
 import com.juliano.domain.repository.EntregaRepository;
 
@@ -29,6 +31,7 @@ public class EntregaController {
 	@Autowired
 	private EntregaRepository entregaRepository;
 	private SolicitacaoEntregaService solicitacaoEntregaService;
+	private FinalizacaoEntregaService finalizacaoEntregaService;
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -37,9 +40,11 @@ public class EntregaController {
 		return solicitacaoEntregaService.solicitar(entregra);
 	}
 
-	public EntregaController(SolicitacaoEntregaService solicitacaoEntregaService) {
-		super();
-		this.solicitacaoEntregaService = solicitacaoEntregaService;
+	
+	@PutMapping("/{entregaId}/finalizacao")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void finalizar(@PathVariable Long entregaId) {
+		finalizacaoEntregaService.finalizar(entregaId);
 	}
 	
 	@GetMapping("/{entregaId}")
@@ -65,6 +70,14 @@ public class EntregaController {
 	@GetMapping
 	public List<Entrega> Listar() {
 		return entregaRepository.findAll();
+	}
+
+	public EntregaController(EntregaRepository entregaRepository, SolicitacaoEntregaService solicitacaoEntregaService,
+			FinalizacaoEntregaService finalizacaoEntregaService) {
+		super();
+		this.entregaRepository = entregaRepository;
+		this.solicitacaoEntregaService = solicitacaoEntregaService;
+		this.finalizacaoEntregaService = finalizacaoEntregaService;
 	}
 
 	
